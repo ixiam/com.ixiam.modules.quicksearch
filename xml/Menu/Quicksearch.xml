@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/quicksearch</path>
+    <page_callback>CRM_Quicksearch_Form_Setting</page_callback>
+    <title>Quicksearch Settings</title>
+    <adminGroup>Customize Data and Screens</adminGroup>
+    <icon>admin/small/36.png</icon>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+</menu>
