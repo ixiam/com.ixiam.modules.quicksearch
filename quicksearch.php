@@ -8,10 +8,45 @@ use CRM_Quicksearch_ExtensionUtil as E;
  */
 function quicksearch_civicrm_coreResourceList(&$items, $region) {
   if ($region == 'html-header') {
-    $listEnabled = CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_basic_fields'));
-    CRM_Core_Resources::singleton()->addVars('quicksearch', array('listEnabled' => $listEnabled));
+    $basicFieldsEnabled = CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_basic_fields'));
+    $customFieldsEnabled = CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_custom_fields'));
+
+    CRM_Core_Resources::singleton()->addVars('quicksearch', array('basicFieldsEnabled' => $basicFieldsEnabled));
+    CRM_Core_Resources::singleton()->addVars('quicksearch', array('customFieldsEnabled' => $customFieldsEnabled));
     CRM_Core_Resources::singleton()->addScriptFile('com.ixiam.modules.quicksearch', 'js/quicksearch.js');
   }
+}
+
+function quicksearch_civicrm_apiWrappers(&$wrappers, $apiRequest) {
+  if ($apiRequest['entity'] == 'Contact' && $apiRequest['action'] == 'getquick') {
+    $wrappers[] = new CRM_Quicksearch_APIWrapper();
+  }
+}
+
+// Reference took from SE question: https://civicrm.stackexchange.com/questions/4011/is-there-a-recommended-way-to-customise-the-quicksearch
+// we recreate civicrm_api3_contact_getlist, because getquick has been deprecated but still in use
+function quicksearch_civicrm_api3_contact_getList($params) {
+  // not loaded by default
+  include_once "api/v3/Generic/Getlist.php";
+  include_once "api/v3/utils.php";
+
+  $apiRequest = array(
+    'entity' => 'Contact',
+    'action' => 'getlist',
+    'params' => $params,
+  );
+  $res = civicrm_api3_generic_getList($apiRequest);
+
+  // reformat the output to look like getquick
+  $field_name = $apiRequest['params']['search_field'];
+  foreach ($res['values'] as $idx => $value) {
+    $res['values'][$idx]['data'] = $value['extra']['sort_name'];
+    if(!preg_match('/(first|last)_name$/', $field_name)){
+      $res['values'][$idx]['data'] .= " :: " . $value['extra'][$field_name];
+    }
+  }
+
+  return $res;
 }
 
 /**

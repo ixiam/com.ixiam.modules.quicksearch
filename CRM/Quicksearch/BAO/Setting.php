@@ -39,4 +39,20 @@ class CRM_Quicksearch_BAO_Setting {
     return $autoSearchFields;
   }
 
+  public static function getCustomFields() {
+    // List of Custom Fields
+    $results = civicrm_api3('CustomField', 'get', array(
+      'sequential' => 1,
+      'return' => array("id", "label", "name", "custom_group_id.name", "custom_group_id.table_name", "custom_group_id.title"),
+      'custom_group_id.extends' => array('IN' => array("Contact", "Individual", "Organization", "Household")),
+      'is_searchable' => 1,
+      'options' => array('sort' => "custom_group_id.title, label"),
+    ));
+    foreach($results["values"] as $key => $value){
+      $cfields[$value['id']] = $value['custom_group_id.title'] . ' :: ' . $value['label'];
+    }
+
+    return $cfields;
+  }
+
 }

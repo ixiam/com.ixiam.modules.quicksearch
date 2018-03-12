@@ -13,6 +13,14 @@
         {$form.quicksearch_basic_fields.html}
       </td>
     </tr>
+    <tr class="crm-quicksearch-form-block-quicksearch_custom_fields">
+      <td class="label">
+        {$form.quicksearch_custom_fields.label}
+      </td>
+      <td>
+        {$form.quicksearch_custom_fields.html}
+      </td>
+    </tr>
   </table>
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
