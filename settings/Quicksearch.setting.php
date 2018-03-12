@@ -13,10 +13,10 @@ return array(
       'callback' => 'CRM_Quicksearch_Form_Setting::getBasicFields',
     ),
     'add' => '4.7',
-    'title' => 'Quicksearch Basic Fields',
+    'title' => 'Basic Fields',
     'is_domain' => 1,
     'is_contact' => 0,
-    'description' => "Selected fields will be displayed in back-office autocomplete dropdown search results (Quick Search, etc.). Contact Name is always included.",
+    'description' => "Basic fields that are shwon by default in quicksearch",
     'help_text' => NULL,
   ),
 );

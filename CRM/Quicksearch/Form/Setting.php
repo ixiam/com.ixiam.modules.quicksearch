@@ -22,7 +22,7 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
       ts('Custom Fields') . ' ', $cFields,
       array(
         'size' => 5,
-        'style' => 'width:150px',
+        'style' => 'width:250px',
         'class' => 'advmultiselect',
       )
     );

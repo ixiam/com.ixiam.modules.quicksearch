@@ -28,6 +28,13 @@ class CRM_Quicksearch_BAO_Setting {
 
   public static function getBasicFieldsEnabled() {
     $list = self::getBasicFields();
+    $autoSearchFields = array();
+
+    // by default  all enabled, as hardocoded in navigation.js.tpl
+    foreach($list as $key => $value){
+      $autoSearchFields[$value] = 1;
+    }
+
     $listEnabled = CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_basic_fields'));
     if(!empty($listEnabled))
       foreach($list as $key => $value){
