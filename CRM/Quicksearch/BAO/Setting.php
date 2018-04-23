@@ -30,7 +30,7 @@ class CRM_Quicksearch_BAO_Setting {
     $list = self::getBasicFields();
     $autoSearchFields = array();
 
-    // by default  all enabled, as hardocoded in navigation.js.tpl
+    // by default all enabled, as hardocoded in navigation.js.tpl
     foreach($list as $key => $value){
       $autoSearchFields[$value] = 1;
     }
