@@ -17,6 +17,9 @@ function quicksearch_civicrm_coreResourceList(&$items, $region) {
   }
 }
 
+/**
+  * Implements hook_civicrm_apiWrappers
+  */
 function quicksearch_civicrm_apiWrappers(&$wrappers, $apiRequest) {
   if ($apiRequest['entity'] == 'Contact' && $apiRequest['action'] == 'getquick') {
     $wrappers[] = new CRM_Quicksearch_APIWrapper();
@@ -42,7 +45,10 @@ function quicksearch_civicrm_api3_contact_getList($params) {
   foreach ($res['values'] as $idx => $value) {
     $res['values'][$idx]['data'] = $value['extra']['sort_name'];
     if(!preg_match('/(first|last)_name$/', $field_name)){
-      $res['values'][$idx]['data'] .= " :: " . $value['extra'][$field_name];
+      if($params['html_type'] == 'Select')
+        $res['values'][$idx]['data'] .= " :: " . $value['api.OptionValue.getvalue'];
+      else
+        $res['values'][$idx]['data'] .= " :: " . $value['extra'][$field_name];
     }
   }
 
