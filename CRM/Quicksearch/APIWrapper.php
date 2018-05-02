@@ -7,7 +7,12 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
     $apiRequest['action'] = 'getlist';
     $apiRequest['function'] = 'quicksearch_civicrm_api3_contact_getList';
 
-    $fieldName = $apiRequest['params']['field_name'];
+    if(!empty($apiRequest['params']['field_name'])) {
+      $fieldName = $apiRequest['params']['field_name'];
+    }
+    else {
+      $fieldName = 'sort_name';
+    }
     $operator = 'LIKE';
 
     // add wildcards

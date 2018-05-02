@@ -44,7 +44,7 @@ function quicksearch_civicrm_api3_contact_getList($params) {
   $field_name = $apiRequest['params']['search_field'];
   foreach ($res['values'] as $idx => $value) {
     $res['values'][$idx]['data'] = $value['extra']['sort_name'];
-    if(!preg_match('/(first|last)_name$/', $field_name)){
+    if(!preg_match('/(first|last|sort)_name$/', $field_name)){
       if($params['html_type'] == 'Select')
         $res['values'][$idx]['data'] .= " :: " . $value['api.OptionValue.getvalue'];
       else
