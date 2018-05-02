@@ -41,7 +41,7 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
     parent::setDefaultValues();
 
     $this->_defaults['quicksearch_basic_fields'] = CRM_Quicksearch_BAO_Setting::getBasicFieldsEnabled();
-    //$this->_defaults['enableComponents'] = Civi::settings()->get('enable_components');
+    $this->_defaults['quicksearch_custom_fields'] = CRM_Quicksearch_BAO_Setting::getCustomFieldsEnabled();
     return $this->_defaults;
   }
 
@@ -60,13 +60,14 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
 
     // save quicksearch_basic_fields options
     if (!empty($params['quicksearch_basic_fields'])) {
-      Civi::settings()->set('quicksearch_basic_fields', CRM_Utils_Array::implodePadded(array_keys($params['quicksearch_basic_fields'])));
+      Civi::settings()->set('quicksearch_basic_fields',
+        CRM_Utils_Array::implodePadded(array_keys($params['quicksearch_basic_fields'])));
       unset($params['quicksearch_basic_fields']);
     }
     // save quicksearch_custom_fields options
     if (array_key_exists('quicksearch_custom_fields', $params)) {
       civicrm_api3('setting', 'create', array(
-        'quicksearch_custom_fields' => $params['quicksearch_custom_fields'],
+        'quicksearch_custom_fields' => CRM_Quicksearch_BAO_Setting::formatCustomFields($params['quicksearch_custom_fields']),
       ));
       unset($params['quicksearch_custom_fields']);
     }

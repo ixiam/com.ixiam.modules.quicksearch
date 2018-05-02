@@ -62,4 +62,25 @@ class CRM_Quicksearch_BAO_Setting {
     return $cfields;
   }
 
+  public static function getCustomFieldsEnabled() {
+    $cfields = array_keys(CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_custom_fields')));
+    return $cfields;
+  }
+
+  public static function formatCustomFields($params) {
+    $result = civicrm_api3('CustomField', 'get', array(
+      'sequential' => 1,
+      'return' => array("label"),
+      'id' => array('IN' => $params),
+    ));
+
+    $return = array();
+    foreach($result['values'] as $key => $value) {
+      $return[$value['id']] = $value['label'];
+    }
+
+    return $return;
+  }
+
+
 }

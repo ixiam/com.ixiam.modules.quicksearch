@@ -12,8 +12,8 @@ CRM.$(function($) {
 
     // add custom fields in quickserach
     newItems = false;
-    CRM.vars.quicksearch.customFieldsEnabled.forEach(function(entry) {
-      var html =  '<li style="position: relative; padding-bottom: 2px; margin-top: 2px;"><div class="menu-item"><label class="crm-quickSearchField"><input type="radio" data-tablename="custom_table" value="custom_' + entry + '" name="quickSearchField">Custom ' + entry + '</label></div></li>';
+    $.each(CRM.vars.quicksearch.customFieldsEnabled, function(id, label) {
+      var html =  '<li style="position: relative; padding-bottom: 2px; margin-top: 2px;"><div class="menu-item"><label class="crm-quickSearchField"><input type="radio" data-tablename="custom_table" value="custom_' + id + '" name="quickSearchField">' + label + '</label></div></li>';
       // this selector could be improved?
       $('ul li label.crm-quickSearchField').closest("ul").append(html);
 
