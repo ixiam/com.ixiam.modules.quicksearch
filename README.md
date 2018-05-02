@@ -40,7 +40,7 @@ cv en quicksearch
 ## Usage
 
 1. Install extension
-2. Go to the Menu ** Administer / Customize Data and Screens / QuickSearch Settings ** or url *civicrm/admin/quicksearch*
+2. Go to the Menu **Administer / Customize Data and Screens / QuickSearch Settings** or url *civicrm/admin/quicksearch*
 3. Disable basic field to be hidden in quiecsearck or add custom field to be shown. Only custom fields set as *Is Searcheable* are available to be selected
 4. Save and start quicksearching!
 
