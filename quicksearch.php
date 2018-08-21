@@ -4,6 +4,23 @@ require_once 'quicksearch.civix.php';
 use CRM_Quicksearch_ExtensionUtil as E;
 
 /**
+ * Implements hook_civicrm_post().
+ */
+function quicksearch_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+  if(($objectName == 'CustomField') && ($op == 'edit')){
+    // update custom field label in settings, just in case it changed
+    $customFieldsEnabled = CRM_Quicksearch_BAO_Setting::getCustomFieldsEnabled();
+    if(in_array($objectId, $customFieldsEnabled)){
+      $customFields = Civi::settings()->get('quicksearch_custom_fields');
+      $customFields[$objectId] = $objectRef->label;
+      civicrm_api3('setting', 'create', array(
+        'quicksearch_custom_fields' => $customFields,
+      ));
+    }
+  }
+}
+
+/**
  * Implements hook_civicrm_coreResourceList().
  */
 function quicksearch_civicrm_coreResourceList(&$items, $region) {
