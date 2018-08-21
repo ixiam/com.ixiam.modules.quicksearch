@@ -4,7 +4,7 @@
 
 Customize CiviCRM's QuickSearch
 - Hide Contact's basic fields that are not normally used in a quicksearch
-- Add custom field in the QuickSearch
+- Add custom fields in the QuickSearch
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
@@ -39,9 +39,9 @@ cv en quicksearch
 
 ## Usage
 
-1. Install extension
+1. Install the extension
 2. Go to the Menu **Administer / Customize Data and Screens / QuickSearch Settings** or url *civicrm/admin/quicksearch*
-3. Disable basic fields to be hidden in quicksearck or add custom fields to be shown. Only custom fields defined as *Is Searcheable* are available to be selected
+3. Disable basic fields to hide add custom fields to be shown in quicksearch. Only custom fields defined as *Is Searcheable* are available to be selected
 4. Save and start quicksearching!
 
 ![Screenshot](images/screenshot2.png)
