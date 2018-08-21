@@ -22,7 +22,13 @@ function quicksearch_civicrm_coreResourceList(&$items, $region) {
   */
 function quicksearch_civicrm_apiWrappers(&$wrappers, $apiRequest) {
   if ($apiRequest['entity'] == 'Contact' && $apiRequest['action'] == 'getquick') {
-    $wrappers[] = new CRM_Quicksearch_APIWrapper();
+    $basicFields = array_values(CRM_Quicksearch_BAO_Setting::getBasicFields());
+    $fieldName = $apiRequest['params']['field_name'];
+
+    // if quicksearch is not by basic fields, or empty (name/email), use own api function
+    if(!empty($fieldName) && !in_array($fieldName, $basicFields)){
+      $wrappers[] = new CRM_Quicksearch_APIWrapper();
+    }
   }
 }
 
