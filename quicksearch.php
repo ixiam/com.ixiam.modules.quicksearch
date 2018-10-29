@@ -1,16 +1,17 @@
 <?php
 
 require_once 'quicksearch.civix.php';
+
 use CRM_Quicksearch_ExtensionUtil as E;
 
 /**
  * Implements hook_civicrm_post().
  */
 function quicksearch_civicrm_post($op, $objectName, $objectId, &$objectRef) {
-  if(($objectName == 'CustomField') && ($op == 'edit')){
+  if (($objectName == 'CustomField') && ($op == 'edit')) {
     // update custom field label in settings, just in case it changed
     $customFieldsEnabled = CRM_Quicksearch_BAO_Setting::getCustomFieldsEnabled();
-    if(in_array($objectId, $customFieldsEnabled)){
+    if (in_array($objectId, $customFieldsEnabled)) {
       $customFields = Civi::settings()->get('quicksearch_custom_fields');
       $customFields[$objectId] = $objectRef->label;
       civicrm_api3('setting', 'create', array(
@@ -35,15 +36,15 @@ function quicksearch_civicrm_coreResourceList(&$items, $region) {
 }
 
 /**
-  * Implements hook_civicrm_apiWrappers
-  */
+ * Implements hook_civicrm_apiWrappers
+ */
 function quicksearch_civicrm_apiWrappers(&$wrappers, $apiRequest) {
   if ($apiRequest['entity'] == 'Contact' && $apiRequest['action'] == 'getquick') {
     $basicFields = array_values(CRM_Quicksearch_BAO_Setting::getBasicFields());
     $fieldName = $apiRequest['params']['field_name'];
 
     // if quicksearch is not by basic fields, or empty (name/email), use own api function
-    if(!empty($fieldName) && !in_array($fieldName, $basicFields)){
+    if (!empty($fieldName) && !in_array($fieldName, $basicFields)) {
       $wrappers[] = new CRM_Quicksearch_APIWrapper();
     }
   }
@@ -67,8 +68,8 @@ function quicksearch_civicrm_api3_contact_getList($params) {
   $field_name = $apiRequest['params']['search_field'];
   foreach ($res['values'] as $idx => $value) {
     $res['values'][$idx]['data'] = $value['extra']['sort_name'];
-    if(!preg_match('/(first|last|sort)_name$/', $field_name)){
-      if($params['html_type'] == 'Select')
+    if (!preg_match('/(first|last|sort)_name$/', $field_name)) {
+      if ($params['html_type'] == 'Select')
         $res['values'][$idx]['data'] .= " :: " . $value['api.OptionValue.getvalue'];
       else
         $res['values'][$idx]['data'] .= " :: " . $value['extra'][$field_name];
@@ -76,6 +77,18 @@ function quicksearch_civicrm_api3_contact_getList($params) {
   }
 
   return $res;
+}
+
+function quicksearch_civicrm_navigationMenu(&$menu) {
+  $path = "Administer/Customize Data and Screens";
+  _quicksearch_civix_insert_navigation_menu($menu, $path, array(
+    'label' => ts('Quicksearch Settings', array('com.ixiam.modules.quicksearch')),
+    'name' => 'Quicksearch Settings',
+    'url' => 'civicrm/admin/quicksearch',
+    'permission' => 'administer CiviCRM',
+    'operator' => '',
+    'separator' => '0'
+  ));
 }
 
 /**

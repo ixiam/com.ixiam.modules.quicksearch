@@ -4,6 +4,7 @@
  * BAO object for quicksearch
  */
 class CRM_Quicksearch_BAO_Setting {
+
   const QUICKSEARCH_PREFERENCES_NAME = 'Quicksearch Preferences';
 
   /**
@@ -31,13 +32,13 @@ class CRM_Quicksearch_BAO_Setting {
     $autoSearchFields = array();
 
     // by default all enabled, as hardocoded in navigation.js.tpl
-    foreach($list as $key => $value){
+    foreach ($list as $key => $value) {
       $autoSearchFields[$value] = 1;
     }
 
     $listEnabled = CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_basic_fields'));
-    if(!empty($listEnabled))
-      foreach($list as $key => $value){
+    if (!empty($listEnabled))
+      foreach ($list as $key => $value) {
         $autoSearchFields[$value] = in_array($value, $listEnabled) ? 1 : 0;
       }
     else
@@ -53,9 +54,9 @@ class CRM_Quicksearch_BAO_Setting {
       'return' => array("id", "label", "name", "custom_group_id.name", "custom_group_id.table_name", "custom_group_id.title"),
       'custom_group_id.extends' => array('IN' => array("Contact", "Individual", "Organization", "Household")),
       'is_searchable' => 1,
-      'options' => array('sort' => "custom_group_id.title, label"),
+      'options' => array('sort' => "custom_group_id.title, label", 'limit' => '1000'),
     ));
-    foreach($results["values"] as $key => $value){
+    foreach ($results["values"] as $key => $value) {
       $cfields[$value['id']] = $value['custom_group_id.title'] . ' :: ' . $value['label'];
     }
 
@@ -63,24 +64,29 @@ class CRM_Quicksearch_BAO_Setting {
   }
 
   public static function getCustomFieldsEnabled() {
-    $cfields = array_keys(CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_custom_fields')));
+    $cfields = array();
+    if (!empty(CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_custom_fields')))) {
+      $cfields = array_keys(CRM_Utils_Array::explodePadded(Civi::settings()->get('quicksearch_custom_fields')));
+    }
     return $cfields;
   }
 
   public static function formatCustomFields($params) {
-    $result = civicrm_api3('CustomField', 'get', array(
+    $api_params = array(
       'sequential' => 1,
       'return' => array("label"),
-      'id' => array('IN' => $params),
-    ));
+    );
+    if (count($params) > 0) {
+      $api_params['id'] = array('IN' => $params);
+    }
+    $result = civicrm_api3('CustomField', 'get', $api_params);
 
     $return = array();
-    foreach($result['values'] as $key => $value) {
+    foreach ($result['values'] as $key => $value) {
       $return[$value['id']] = $value['label'];
     }
 
     return $return;
   }
-
 
 }

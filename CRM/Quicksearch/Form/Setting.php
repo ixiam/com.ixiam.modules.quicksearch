@@ -1,4 +1,5 @@
 <?php
+
 use CRM_Quicksearch_ExtensionUtil as E;
 
 /**
@@ -18,13 +19,11 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
    */
   public function buildQuickForm() {
     $cFields = CRM_Quicksearch_BAO_Setting::getCustomFields();
-    $include = &$this->addElement('advmultiselect', 'quicksearch_custom_fields',
-      ts('Custom Fields') . ' ', $cFields,
-      array(
+    $include = &$this->addElement('advmultiselect', 'quicksearch_custom_fields', ts('Custom Fields') . ' ', $cFields, array(
         'size' => 5,
         'style' => 'width:250px',
         'class' => 'advmultiselect',
-      )
+        )
     );
 
     $include->setButtonAttributes('add', array('value' => ts('Enable >>')));
@@ -60,12 +59,11 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
 
     // save quicksearch_basic_fields options
     if (!empty($params['quicksearch_basic_fields'])) {
-      Civi::settings()->set('quicksearch_basic_fields',
-        CRM_Utils_Array::implodePadded(array_keys($params['quicksearch_basic_fields'])));
+      Civi::settings()->set('quicksearch_basic_fields', CRM_Utils_Array::implodePadded(array_keys($params['quicksearch_basic_fields'])));
       unset($params['quicksearch_basic_fields']);
     }
-    // save quicksearch_custom_fields options
-    if (array_key_exists('quicksearch_custom_fields', $params)) {
+    // save quicksearch_custom_fields options, if any one of them is selected
+    if (array_key_exists('quicksearch_custom_fields', $params) && count($params['quicksearch_custom_fields']) > 0) {
       civicrm_api3('setting', 'create', array(
         'quicksearch_custom_fields' => CRM_Quicksearch_BAO_Setting::formatCustomFields($params['quicksearch_custom_fields']),
       ));
@@ -73,4 +71,5 @@ class CRM_Quicksearch_Form_Setting extends CRM_Admin_Form_Setting {
     }
     parent::commonProcess($params);
   }
+
 }
