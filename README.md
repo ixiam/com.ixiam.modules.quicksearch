@@ -1,3 +1,9 @@
+**Important:** This repo has been moved to: https://lab.civicrm.org/extensions/quicksearch
+
+
+
+---
+
 # com.ixiam.modules.quicksearch
 
 ![Screenshot](images/screenshot1.png)
