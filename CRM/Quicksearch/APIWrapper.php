@@ -7,7 +7,7 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
     $apiRequest['action'] = 'getlist';
     $apiRequest['function'] = 'quicksearch_civicrm_api3_contact_getList';
 
-    if(!empty($apiRequest['params']['field_name'])) {
+    if (!empty($apiRequest['params']['field_name'])) {
       $fieldName = $apiRequest['params']['field_name'];
     }
     else {
@@ -16,7 +16,7 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
     $operator = 'LIKE';
 
     // add wildcards
-    if(in_array($fieldName, array('contact_id', 'external_identifier'))) {
+    if (in_array($fieldName, array('contact_id', 'external_identifier'))) {
       $input = $apiRequest['params']['name'];
     }
     else {
@@ -29,14 +29,14 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
     }
 
     // if custom field typeof select, we need to search on option_value label and not in value
-    if($apiRequest['params']['table_name'] == 'custom_table') {
+    if ($apiRequest['params']['table_name'] == 'custom_table') {
       $customFieldID = CRM_Core_BAO_CustomField::getKeyID($fieldName);
       $customFieldInfo = civicrm_api3('CustomField', 'getsingle', array(
         'return' => array("html_type", "option_group_id"),
         'id' => $customFieldID,
       ));
 
-      if($customFieldInfo['html_type'] == 'Select'){
+      if ($customFieldInfo['html_type'] == 'Select') {
         $operator = 'IN';
         $result = civicrm_api3('OptionValue', 'get', array(
           'sequential' => 1,
@@ -57,7 +57,13 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
     }
 
     $apiRequest['params']['search_field'] = $fieldName;
-    $apiRequest['params']['input'] = array($operator => $input);
+    if ($operator === 'LIKE') {
+      $apiRequest['params']['input'] = $input;
+    }
+    else {
+      $apiRequest['params']['input'] = array($operator => $input);
+    }
+
     $apiRequest['params']['extra'] = array('sort_name', $fieldName);
 
     unset($apiRequest['params']['table_name']);
@@ -66,7 +72,6 @@ class CRM_Quicksearch_APIWrapper implements API_Wrapper {
 
     return $apiRequest;
   }
-
 
   /**
    * alter the result before returning it to the caller.
